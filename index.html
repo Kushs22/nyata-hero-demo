@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Nyata API Demo</title>
+<style>
+body{
+font-family:Arial;
+max-width:600px;
+margin:40px auto;
+padding:20px;
+}
+textarea,button{
+width:100%;
+padding:10px;
+margin-top:10px;
+}
+#output{
+margin-top:20px;
+padding:15px;
+background:#f5f5f5;
+border-radius:8px;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Chat with Nyata API</h2>
+
+<textarea
+id="message"
+rows="4"
+placeholder="Type a message..."
+></textarea>
+
+<button onclick="send()">Send</button>
+
+<div id="output">
+Response appears here...
+</div>
+
+<script>
+async function send(){
+
+const text =
+document.getElementById("message").value;
+
+document.getElementById("output")
+.innerText="Loading...";
+
+try{
+
+const res =
+await fetch(
+"https://ai.mottatracking.com/external_api.php",
+{
+method:"POST",
+headers:{
+"Content-Type":"application/json",
+"X-API-Key":"YOUR_API_KEY_HERE"
+},
+body:JSON.stringify({
+model:
+"ft:gpt-4.1-mini-2025-04-14:nyata:bristol:ChciyaQP",
+messages:[
+{
+role:"user",
+content:text
+}
+]
+})
+});
+
+const data =
+await res.json();
+
+document
+.getElementById("output")
+.innerText =
+data.choices?.[0]
+?.message?.content
+||
+"Unexpected response";
+
+}
+
+catch(e){
+
+document
+.getElementById("output")
+.innerText=
+"Error: "
++e.message;
+}
+}
+</script>
+</body>
+</html>
